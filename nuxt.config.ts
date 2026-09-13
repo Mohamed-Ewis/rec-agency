@@ -1,6 +1,9 @@
+const githubPages = process.env.GITHUB_PAGES === 'true'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-09-13',
   devtools: { enabled: false },
+  ssr: !githubPages,
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vueuse/nuxt'],
   css: ['~/assets/css/main.css'],
   components: [{ path: '~/components', pathPrefix: false }],

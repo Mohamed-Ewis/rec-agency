@@ -3,6 +3,9 @@
 Internal desk for a small technical recruitment team.  
 مكتب تشغيل داخلي لوكالة توظيف تقنية صغيرة.
 
+**Live / الرابط الحي:** [https://mohamed-ewis.github.io/rec-agency/](https://mohamed-ewis.github.io/rec-agency/)  
+**Repo:** [https://github.com/Mohamed-Ewis/rec-agency](https://github.com/Mohamed-Ewis/rec-agency)
+
 **Docs / التوثيق**
 
 | English | العربية |

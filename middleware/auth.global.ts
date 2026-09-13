@@ -1,6 +1,8 @@
 import { hasPermission } from '~/utils/permissions'
 
 export default defineNuxtRouteMiddleware((to) => {
+  if (import.meta.prerender) return
+
   const auth = useAuthStore()
 
   if (to.meta.public) {

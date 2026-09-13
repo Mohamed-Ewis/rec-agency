@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { Availability } from '~/types'
+
 definePageMeta({ title: 'Candidate', resource: 'candidates', action: 'view' })
 
 const route = useRoute()
@@ -10,6 +12,29 @@ const fmt = useFormat()
 const note = ref('')
 const sendOpen = ref(false)
 const sendJobId = ref('')
+const editOpen = ref(false)
+const draftFirstName = ref('')
+const draftLastName = ref('')
+const draftEmail = ref('')
+const draftPhone = ref('')
+const draftLocation = ref('')
+const draftTitle = ref('')
+const draftLinkedinUrl = ref('')
+const draftSkills = ref('')
+const draftYears = ref('')
+const draftSalary = ref('')
+const draftAvailability = ref<Availability>('2_weeks')
+const draftSource = ref('')
+const draftNotes = ref('')
+const draftCvSummary = ref('')
+
+const availabilityOptions = [
+  { value: 'immediate', label: 'Immediate' },
+  { value: '2_weeks', label: '2 weeks' },
+  { value: '1_month', label: '1 month' },
+  { value: 'notice', label: 'Notice' },
+  { value: 'passive', label: 'Passive' }
+]
 
 const candidate = computed(() => agency.candidates.find(item => item.id === route.params.id as string))
 if (!candidate.value) throw createError({ statusCode: 404, statusMessage: 'Candidate not found' })
@@ -25,6 +50,59 @@ function saveNote() {
   note.value = ''
   ui.toast('Note added')
 }
+
+function openEdit() {
+  if (!candidate.value) return
+  draftFirstName.value = candidate.value.firstName
+  draftLastName.value = candidate.value.lastName
+  draftEmail.value = candidate.value.email
+  draftPhone.value = candidate.value.phone
+  draftLocation.value = candidate.value.location
+  draftTitle.value = candidate.value.currentTitle
+  draftLinkedinUrl.value = candidate.value.linkedinUrl
+  draftSkills.value = candidate.value.skills.join(', ')
+  draftYears.value = String(candidate.value.yearsExperience)
+  draftSalary.value = String(candidate.value.salaryExpectation)
+  draftAvailability.value = candidate.value.availability
+  draftSource.value = candidate.value.source
+  draftNotes.value = candidate.value.notes
+  draftCvSummary.value = candidate.value.cvSummary
+  editOpen.value = true
+}
+
+function saveEdit() {
+  if (!candidate.value) return
+  const first = draftFirstName.value.trim()
+  const last = draftLastName.value.trim()
+  if (!first || !last) {
+    ui.toast('Enter a first and last name', 'error')
+    return
+  }
+  const years = Number(draftYears.value)
+  const salary = Number(draftSalary.value)
+  if (!Number.isFinite(years) || years < 0 || !Number.isFinite(salary) || salary < 0) {
+    ui.toast('Enter a valid experience and salary', 'error')
+    return
+  }
+  agency.updateCandidate(candidate.value.id, {
+    firstName: first,
+    lastName: last,
+    email: draftEmail.value.trim(),
+    phone: draftPhone.value.trim(),
+    location: draftLocation.value.trim(),
+    currentTitle: draftTitle.value.trim(),
+    linkedinUrl: draftLinkedinUrl.value.trim(),
+    skills: draftSkills.value.split(',').map(item => item.trim()).filter(Boolean),
+    yearsExperience: years,
+    salaryExpectation: salary,
+    availability: draftAvailability.value,
+    source: draftSource.value.trim(),
+    notes: draftNotes.value.trim(),
+    cvSummary: draftCvSummary.value.trim()
+  })
+  ui.toast('Candidate updated')
+  editOpen.value = false
+}
 </script>
 
 <template>
@@ -34,6 +112,7 @@ function saveNote() {
         <NuxtLink to="/candidates" class="hover:underline">Candidates</NuxtLink> / {{ candidate.firstName }} {{ candidate.lastName }}
       </template>
       <template #actions>
+        <AppButton v-if="can('candidates', 'edit')" size="sm" @click="openEdit">Edit</AppButton>
         <AppButton v-if="can('opportunities', 'view')" size="sm" @click="navigateTo(`/opportunities?candidate=${candidate.id}`)">Find jobs</AppButton>
         <AppButton
           v-if="suggestedJobs[0] && (can('opportunities', 'create') || can('opportunities', 'edit'))"
@@ -54,7 +133,7 @@ function saveNote() {
             <div><dt class="text-xs text-ink-faint">Email</dt><dd><a :href="`mailto:${candidate.email}`" class="text-primary hover:underline">{{ candidate.email }}</a></dd></div>
             <div><dt class="text-xs text-ink-faint">Phone</dt><dd>{{ candidate.phone }}</dd></div>
             <div><dt class="text-xs text-ink-faint">Location</dt><dd>{{ candidate.location }}</dd></div>
-            <div><dt class="text-xs text-ink-faint">LinkedIn</dt><dd><a :href="candidate.linkedinUrl" class="text-primary hover:underline" target="_blank" rel="noreferrer">Profile</a></dd></div>
+            <div><dt class="text-xs text-ink-faint">LinkedIn</dt><dd><a v-if="candidate.linkedinUrl" :href="candidate.linkedinUrl" class="text-primary hover:underline" target="_blank" rel="noreferrer">{{ candidate.linkedinUrl }}</a><span v-else class="text-ink-faint">—</span></dd></div>
             <div><dt class="text-xs text-ink-faint">Experience</dt><dd>{{ candidate.yearsExperience }} years</dd></div>
             <div><dt class="text-xs text-ink-faint">Salary expectation</dt><dd class="font-mono tabular">{{ fmt.money(candidate.salaryExpectation) }}</dd></div>
             <div><dt class="text-xs text-ink-faint">Availability</dt><dd><StatusBadge :value="candidate.availability" /></dd></div>
@@ -161,5 +240,54 @@ function saveNote() {
       :job-id="sendJobId"
       @close="sendOpen = false"
     />
+
+    <AppDrawer :open="editOpen" title="Edit candidate" @close="editOpen = false">
+      <form class="space-y-4" @submit.prevent="saveEdit">
+        <div class="grid gap-3 sm:grid-cols-2">
+          <AppInput v-model="draftFirstName" label="First name" />
+          <AppInput v-model="draftLastName" label="Last name" />
+        </div>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <AppInput v-model="draftEmail" label="Email" type="email" />
+          <AppInput v-model="draftPhone" label="Phone" />
+        </div>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <AppInput v-model="draftTitle" label="Current title" />
+          <AppInput v-model="draftLocation" label="Location" />
+        </div>
+        <AppInput v-model="draftLinkedinUrl" label="LinkedIn URL" hint="Paste a profile URL — stored as text only" />
+        <AppInput v-model="draftSkills" label="Skills" hint="Comma-separated" />
+        <div class="grid gap-3 sm:grid-cols-2">
+          <AppInput v-model="draftYears" label="Years experience" type="number" />
+          <AppInput v-model="draftSalary" label="Salary expectation (GBP)" type="number" />
+        </div>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <AppSelect v-model="draftAvailability" label="Availability" :options="availabilityOptions" />
+          <AppInput v-model="draftSource" label="Source" />
+        </div>
+        <label class="block">
+          <span class="mb-1 block text-sm font-medium text-ink">CV summary</span>
+          <textarea
+            v-model="draftCvSummary"
+            rows="3"
+            class="min-h-[80px] w-full rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+          />
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-sm font-medium text-ink">Notes</span>
+          <textarea
+            v-model="draftNotes"
+            rows="3"
+            class="min-h-[80px] w-full rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+          />
+        </label>
+      </form>
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <AppButton variant="ghost" @click="editOpen = false">Cancel</AppButton>
+          <AppButton variant="primary" @click="saveEdit">Save</AppButton>
+        </div>
+      </template>
+    </AppDrawer>
   </div>
 </template>

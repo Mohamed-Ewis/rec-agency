@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { credentials, users } from '~/data'
-import { ROLE_LABELS } from '~/utils/constants'
-
 definePageMeta({
   layout: 'auth',
   public: true,
@@ -17,18 +14,6 @@ const passwordError = ref('')
 const formError = ref('')
 const submitting = ref(false)
 
-const demos = computed(() =>
-  credentials.map((item) => {
-    const user = users.find(entry => entry.id === item.userId)
-    return {
-      email: item.email,
-      password: item.password,
-      name: user?.name ?? item.email,
-      role: user ? ROLE_LABELS[user.role] : ''
-    }
-  })
-)
-
 function validate() {
   emailError.value = ''
   passwordError.value = ''
@@ -37,14 +22,6 @@ function validate() {
   else if (!email.value.includes('@')) emailError.value = 'Enter a valid email address.'
   if (!password.value) passwordError.value = 'Enter your password.'
   return !emailError.value && !passwordError.value
-}
-
-function fill(demoEmail: string, demoPassword: string) {
-  email.value = demoEmail
-  password.value = demoPassword
-  emailError.value = ''
-  passwordError.value = ''
-  formError.value = ''
 }
 
 async function submit() {
@@ -91,30 +68,6 @@ async function submit() {
           {{ submitting ? 'Checking…' : 'Sign in' }}
         </AppButton>
       </form>
-    </AppCard>
-
-    <AppCard class="mt-4" flush>
-      <template #header>
-        <div>
-          <h2 class="text-sm font-semibold text-ink">Demo desk accounts</h2>
-          <p class="text-xs text-ink-faint">Mock only. Click a row to fill the form.</p>
-        </div>
-      </template>
-      <ul>
-        <li v-for="demo in demos" :key="demo.email" class="border-b border-slate-100 last:border-0">
-          <button
-            type="button"
-            class="flex w-full cursor-pointer items-center justify-between gap-3 px-4 py-2.5 text-left hover:bg-primary-50/70"
-            @click="fill(demo.email, demo.password)"
-          >
-            <span>
-              <span class="block text-sm font-medium text-ink">{{ demo.name }}</span>
-              <span class="block font-mono text-xs text-ink-faint">{{ demo.email }}</span>
-            </span>
-            <AppBadge tone="blue" :label="demo.role" />
-          </button>
-        </li>
-      </ul>
     </AppCard>
   </div>
 </template>

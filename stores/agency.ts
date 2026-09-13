@@ -162,6 +162,66 @@ export const useAgencyStore = defineStore('agency', () => {
     Object.assign(job, patch)
   }
 
+
+  function createCandidate(input: Omit<Candidate, 'id' | 'createdAt'> & Partial<Pick<Candidate, 'createdAt'>>, actorId: string) {
+    const candidate: Candidate = {
+      ...input,
+      id: uid('can'),
+      createdAt: input.createdAt ?? new Date().toISOString().slice(0, 10)
+    }
+    candidates.value.unshift(candidate)
+    addActivity({
+      type: 'status_change',
+      title: `Added ${candidate.firstName} ${candidate.lastName}`,
+      body: `New candidate${candidate.currentTitle ? ` — ${candidate.currentTitle}` : ''}.`,
+      actorId,
+      candidateId: candidate.id
+    })
+    return candidate
+  }
+
+  function updateCandidate(candidateId: string, patch: Partial<Candidate>) {
+    const candidate = candidates.value.find(item => item.id === candidateId)
+    if (!candidate) return
+    Object.assign(candidate, patch)
+  }
+
+  function createClient(input: Omit<Client, 'id' | 'createdAt'> & Partial<Pick<Client, 'createdAt'>>, actorId: string) {
+    const client: Client = {
+      ...input,
+      id: uid('cli'),
+      createdAt: input.createdAt ?? new Date().toISOString().slice(0, 10),
+      contacts: (input.contacts ?? []).map(contact => ({
+        ...contact,
+        id: contact.id || uid('cc')
+      }))
+    }
+    clients.value.unshift(client)
+    addActivity({
+      type: 'status_change',
+      title: `Opened ${client.name}`,
+      body: `New client${client.industry ? ` in ${client.industry}` : ''}.`,
+      actorId,
+      clientId: client.id
+    })
+    return client
+  }
+
+  function updateClient(clientId: string, patch: Partial<Client>) {
+    const client = clients.value.find(item => item.id === clientId)
+    if (!client) return
+    if (patch.contacts) {
+      patch = {
+        ...patch,
+        contacts: patch.contacts.map(contact => ({
+          ...contact,
+          id: contact.id || uid('cc')
+        }))
+      }
+    }
+    Object.assign(client, patch)
+  }
+
   function addCandidateToJob(jobId: string, candidateId: string, actorId: string) {
     const exists = pipeline.value.find(entry => entry.jobId === jobId && entry.candidateId === candidateId)
     if (exists) return exists
@@ -556,6 +616,10 @@ export const useAgencyStore = defineStore('agency', () => {
     duplicateJob,
     createJob,
     updateJob,
+    createCandidate,
+    updateCandidate,
+    createClient,
+    updateClient,
     addCandidateToJob,
     movePipeline,
     updateTask,

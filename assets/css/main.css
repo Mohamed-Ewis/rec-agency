@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #1e40af;
+  --color-secondary: #3b82f6;
+  --color-cta: #f59e0b;
+  --color-background: #f8fafc;
+  --color-text: #1e3a8a;
+  --color-surface: #ffffff;
+  --color-border: #e2e8f0;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 6px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 10px 15px rgba(15, 23, 42, 0.1);
+}
+
+html,
+body,
+#__nuxt {
+  min-height: 100dvh;
+}
+
+body {
+  @apply bg-canvas font-sans text-slate-800 antialiased;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+:focus-visible {
+  outline: 2px solid #1e40af;
+  outline-offset: 2px;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.skip-link {
+  @apply sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[80] focus:rounded focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-primary focus:shadow-lg;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 180ms ease;
+}
+
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+}

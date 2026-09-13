@@ -1,0 +1,22 @@
+import type { Interview } from '~/types'
+
+export const interviews: Interview[] = [
+  { id: 'int_01', candidateId: 'can_owen', jobId: 'job_de', interviewer: 'Hannah Reid', startsAt: '2026-06-18T10:00:00Z', durationMin: 45, stage: 'hiring_manager', status: 'completed', feedback: 'Hired. Strong dbt instincts, calm under clinical data constraints.', ownerId: 'usr_james' },
+  { id: 'int_02', candidateId: 'can_nina', jobId: 'job_plat', interviewer: 'Sofia Alvarez', startsAt: '2026-08-27T14:00:00Z', durationMin: 60, stage: 'screening', status: 'completed', feedback: 'Staff presence. Clear opinions on golden paths.', ownerId: 'usr_elena' },
+  { id: 'int_03', candidateId: 'can_arjun', jobId: 'job_be', interviewer: 'James Okonkwo', startsAt: '2026-09-09T09:30:00Z', durationMin: 30, stage: 'screening', status: 'completed', feedback: 'Motivated by clinical impact. Ready for HM.', ownerId: 'usr_james' },
+  { id: 'int_04', candidateId: 'can_nina', jobId: 'job_plat', interviewer: 'Platform panel', startsAt: '2026-09-10T13:00:00Z', durationMin: 75, stage: 'technical', status: 'completed', feedback: 'Passed. Deep K8s and observability. Recommend final.', ownerId: 'usr_elena' },
+  { id: 'int_05', candidateId: 'can_yara', jobId: 'job_fe', interviewer: 'Nate Cowan', startsAt: '2026-09-11T15:00:00Z', durationMin: 45, stage: 'hiring_manager', status: 'completed', feedback: 'Liked a11y examples. Wants a take-home on Nuxt routing.', ownerId: 'usr_elena' },
+  { id: 'int_06', candidateId: 'can_claire', jobId: 'job_pd', interviewer: 'Amira Soltani', startsAt: '2026-09-12T10:00:00Z', durationMin: 60, stage: 'hiring_manager', status: 'completed', feedback: 'Strong systems thinking. Founder still wants to meet.', ownerId: 'usr_elena' },
+  { id: 'int_07', candidateId: 'can_sienna', jobId: 'job_pd', interviewer: 'Amira Soltani', startsAt: '2026-09-04T11:00:00Z', durationMin: 45, stage: 'final', status: 'completed', feedback: 'Offer verbal at 90k. Candidate asked 95k.', ownerId: 'usr_elena' },
+  { id: 'int_08', candidateId: 'can_ben', jobId: 'job_sec', interviewer: 'Rebecca Shaw', startsAt: '2026-09-08T16:00:00Z', durationMin: 60, stage: 'final', status: 'completed', feedback: 'Ready to offer. Confirm start and package.', ownerId: 'usr_james' },
+  { id: 'int_09', candidateId: 'can_felix', jobId: 'job_sec', interviewer: 'AppSec panel', startsAt: '2026-09-14T09:00:00Z', durationMin: 60, stage: 'technical', status: 'scheduled', ownerId: 'usr_james' },
+  { id: 'int_10', candidateId: 'can_hana', jobId: 'job_ml', interviewer: 'Liam Cho', startsAt: '2026-09-14T13:00:00Z', durationMin: 50, stage: 'screening', status: 'scheduled', ownerId: 'usr_james' },
+  { id: 'int_11', candidateId: 'can_leila', jobId: 'job_em', interviewer: 'Sofia Alvarez', startsAt: '2026-09-15T10:00:00Z', durationMin: 60, stage: 'hiring_manager', status: 'scheduled', ownerId: 'usr_elena' },
+  { id: 'int_12', candidateId: 'can_samir', jobId: 'job_ml', interviewer: 'ML panel', startsAt: '2026-09-17T14:00:00Z', durationMin: 75, stage: 'technical', status: 'scheduled', ownerId: 'usr_james' },
+  { id: 'int_13', candidateId: 'can_luis', jobId: 'job_fe', interviewer: 'Elena Varga', startsAt: '2026-09-16T09:30:00Z', durationMin: 30, stage: 'screening', status: 'scheduled', ownerId: 'usr_elena' },
+  { id: 'int_14', candidateId: 'can_ben', jobId: 'job_sec', interviewer: 'Rebecca Shaw', startsAt: '2026-09-16T15:00:00Z', durationMin: 30, stage: 'offer', status: 'scheduled', ownerId: 'usr_james' },
+  { id: 'int_15', candidateId: 'can_rafa', jobId: 'job_plat', interviewer: 'Platform panel', startsAt: '2026-09-18T11:00:00Z', durationMin: 60, stage: 'technical', status: 'scheduled', ownerId: 'usr_elena' },
+  { id: 'int_16', candidateId: 'can_iris', jobId: 'job_be', interviewer: 'Hannah Reid', startsAt: '2026-09-19T10:30:00Z', durationMin: 45, stage: 'hiring_manager', status: 'scheduled', ownerId: 'usr_james' },
+  { id: 'int_17', candidateId: 'can_theo', jobId: 'job_ops', interviewer: 'James Okonkwo', startsAt: '2026-09-05T09:00:00Z', durationMin: 30, stage: 'screening', status: 'no_show', feedback: 'Reschedule once. If missed again, close.', ownerId: 'usr_james' },
+  { id: 'int_18', candidateId: 'can_jonas', jobId: 'job_plat', interviewer: 'Elena Varga', startsAt: '2026-09-02T15:00:00Z', durationMin: 30, stage: 'screening', status: 'completed', feedback: 'Technical yes. Domain conversation still needed.', ownerId: 'usr_elena' }
+]
